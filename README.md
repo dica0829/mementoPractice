@@ -56,3 +56,4 @@
 >   FilesystemComponent 타입의 객체 트리 구조를 반환했다.  
 > • 이번 과제에서는 여기서 반환한 FilesystemComponent 에 대해 serialize() 를 호출 한 후,  
 >   그 결과를 새로운 Directory 객체를 만들어서 deserialize() 하게끔 한다.  
+<img width="1004" alt="Image" src="https://github.com/user-attachments/assets/8cc2839a-8a05-4bd2-985d-68aa52629ac3" />
