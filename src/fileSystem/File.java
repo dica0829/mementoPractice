@@ -36,7 +36,7 @@ public class File implements FileSystemComponent {
     @Override
     public void deserialize(String opaque) {
         Pattern pattern = Pattern.compile("(.+)/File:(.+) \\((\\d+) B\\) depth:(\\d+)");
-        Matcher matcher = pattern.matcher(opaque.trim());
+        Matcher matcher = pattern.matcher(opaque);
 
         if (matcher.matches()) {
             this.name = matcher.group(2).trim();           // 파일 이름 (공백 포함)
