@@ -14,7 +14,7 @@ public class Main {
         directory.display();
 
         //2번 과제
-        System.out.println("--------------2번 과제--------------------");
+        System.out.println("--------------2번 과제 memento--------------------");
         String opaque = directory.serialize();
         FileSystemComponent newDirectory = new Directory();
         newDirectory.deserialize(opaque);
