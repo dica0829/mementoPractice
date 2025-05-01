@@ -22,16 +22,7 @@
 > • 생성된 FilesystemComponent 타입 객체에 대해 (실제는 현재 디렉터리를 나타내는 Directory 객체) display() 메서드를 호출한다.  
 >   - 현재 디렉터리에 대응되는 Directory 의 display() 가 호출될 것이므로 재귀적으로 동작할 것이다.  
 >   - 이 때 디렉터리 깊이에 따라 들여쓰기를 해준다.  
->  
-> 출력 예시  
-> ./ (total 1252 B)  
->  file1.txt (123 B)  
->  file2.txt (234 B)  
->  subDir1/ (total: 495 B)  
->   file3.txt (345 B)  
->   file4.txt (150 B)  
->  subDir2/ (total: 400 B)  
->   file5.txt (400 B)  
+> 
 >  
 > 과제2  
 >  
