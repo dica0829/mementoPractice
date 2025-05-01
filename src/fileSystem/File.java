@@ -10,15 +10,17 @@ public class File implements FileSystemComponent {
         this.size = size;
         this.depth = depth;
     }
-    public File() {}
+    public File() { // 기본 생성자
+        this("", 0, 0);
+    }
 
     @Override
-    public void display() {
+    public void display() { // 파일 이름과 사이즈를 출력, 깊이에 따른 들여쓰기
         System.out.printf(" ".repeat(depth)+"%s (%d B)\n", name, size);
     }
 
     @Override
-    public long getSize() {
+    public long getSize() { // 사이즈 반환
         return size;
     }
 

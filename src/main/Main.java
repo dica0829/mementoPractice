@@ -9,7 +9,7 @@ public class Main {
         int depth = 1; // 가독성을 위한 들여쓰기 갯수 처음은 무조건 최상위 폴더 안 파일들이므로 기본은 1
         FileSystemComponent directory = new Directory(); // 최상위이므로 depth 0
         //시작 디렉토리는 최상위 폴더
-        loadDirectory(new java.io.File("."), directory, depth); // 최상위 폴더, 시작 디렉토리, 들여쓰기 갯수를 집어넣는다.
+        loadDirectory(new java.io.File("."), directory, depth); // 최상위 폴더, 시작 디렉토리, 깊이를 집어넣는다.
         // 이제 디렉터리의 모든 파일과 디렉터리를 읽었으므로 출력. 재귀적으로 동작할 것이다.
         directory.display();
 

@@ -10,8 +10,7 @@ public class Directory implements FileSystemComponent {
     public ArrayList<FileSystemComponent> files = new ArrayList<>(); // 파일 목록을 읽기 위한 리스트
 
     public Directory() { //기본 최상위 생성자
-        this.name = ".";
-        this.depth = 0;
+        this(".", 0);
     }
 
     public Directory(String name, int depth) { // 폴더 지정 생성자
