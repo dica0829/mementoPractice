@@ -1,5 +1,8 @@
 package fileSystem;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class File implements FileSystemComponent {
     private String name;
     private long size;
@@ -26,17 +29,21 @@ public class File implements FileSystemComponent {
 
     // 과제2
     @Override
-    public String serialize() {//name[0] (size[1] B)[2] 깊이:[3] depth[4]
-        return name + " (" + size + " B) depth: " + depth + "\n";
+    public String serialize() {//File:name (size B) depth: depth
+        return "File:" + name + " (" + size + " B) depth:" + depth + "\n";
     }
 
     @Override
     public void deserialize(String opaque) {
-        String line = opaque.trim();
-        String[] parts = line.split(" "); // 공백을 기준으로 슬라이싱
-        this.name = parts[0]; // 이름은 항상 처음에 있음
-        //(사이즈 B)에서 사이즈만 빼오기
-        this.size = Long.parseLong(parts[1].replace("(", "").replace("B)", ""));
-        this.depth = Integer.parseInt(parts[4]); //깊이는 항상 4번에 위치
+        Pattern pattern = Pattern.compile("(.+)/File:(.+) \\((\\d+) B\\) depth:(\\d+)");
+        Matcher matcher = pattern.matcher(opaque.trim());
+
+        if (matcher.matches()) {
+            this.name = matcher.group(2).trim();           // 파일 이름 (공백 포함)
+            this.size = Long.parseLong(matcher.group(3));  // 파일 크기
+            this.depth = Integer.parseInt(matcher.group(4)); // 깊이
+        } else {
+            throw new IllegalArgumentException("Invalid format: " + opaque);
+        }
     }
 }

@@ -2,7 +2,8 @@ package fileSystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Directory implements FileSystemComponent {
     private String name; // 폴더 이름
@@ -41,10 +42,10 @@ public class Directory implements FileSystemComponent {
 
     // 과제2
     @Override
-    public String serialize() { //폴더제목/ (total: 사이즈) depth: 깊이
-        String result = name + "/ (total: " + this.getSize() + " B) depth: " + depth + "\n";
+    public String serialize() { //Dir:name/ (total: size) depth: depth
+        String result = "Dir:" + name + "/ (total: " + this.getSize() + " B) depth:" + depth + "\n";
         for (FileSystemComponent file : files) {
-            result += file.serialize(); // 문자열 결합
+            result += name + "/" + file.serialize(); // 문자열 결
         }
         return result;
     }
@@ -57,9 +58,14 @@ public class Directory implements FileSystemComponent {
     }
 
     public int deserializeRecursive(Directory current, String[] lines, int index) {
+        //정규식
+        // (.+) : 공백을 포함한 하나 이상의 문자
+        // (\\d+) : 숫자 1개 이상
+        Pattern dirPattern = Pattern.compile("(.+)/Dir:(.+)/ \\(total: (\\d+) B\\) depth:(\\d+)");
         while (index < lines.length) { //읽은 라인만큼 확인
             String line = lines[index];
-            int depth = Integer.parseInt(line.replaceAll(".*depth: ", ""));
+            Matcher matcher = dirPattern.matcher(line); // 디렉토리의 정규식이 line과 맞는지 검사
+            int depth = Integer.parseInt(line.replaceAll(".*depth:", ""));
 
             // 현재 디렉토리의 depth보다 이 파일의 depth가 작거나 같으면 디렉토리에서 빠져나옴
             // (크다면 디렉토리 안 파일임)
@@ -67,8 +73,8 @@ public class Directory implements FileSystemComponent {
                 break;
             }
 
-            if (line.contains("/ (total:")) {// 디렉토리인 경우
-                String dirName = line.split("/")[0]; //이름
+            if (matcher.matches()) {// 디렉토리인 경우
+                String dirName = matcher.group(2); //정규식의 이름을 갖고옴 (.+)
                 Directory dir = new Directory(dirName, depth);//현재 depth와 이름을 새로운 디렉토리로 만듦
                 current.add(dir); // 상위 디렉토리에 추가
                 index = deserializeRecursive(dir, lines, index + 1);// 재귀로 돌고 난 뒤 다음 인덱스를 반환
