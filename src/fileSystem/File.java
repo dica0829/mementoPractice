@@ -22,12 +22,7 @@ public class File implements FileSystemComponent {
         return size;
     }
 
-    public int getDepth() {
-        return depth;
-    }
-
     // 과제2
-
     @Override
     public String serialize() {//name[0] (size[1] B)[2] 깊이:[3] depth[4]
         return name + " (" + size + " B) depth: " + depth + "\n";

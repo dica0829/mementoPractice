@@ -14,6 +14,7 @@ public class Main {
         directory.display();
 
         //2번 과제
+        System.out.println("--------------2번 과제--------------------");
         String opaque = directory.serialize();
         FileSystemComponent newDirectory = new Directory();
         newDirectory.deserialize(opaque);
@@ -31,7 +32,7 @@ public class Main {
                 ((Directory) directory).add(d); // 디렉토리에 추가
                 depth += 1; // 하위 폴더 진입하면 깊이 1개 추가
                 loadDirectory(file, d, depth); // 루트 폴더에 지금 탐색하는 폴더를 넣고 하위 파일에 대해 다시 조사
-                depth -= 1; // 하위 폴더에서 빠져나오면 깊이 1개 삭제
+                depth -= 1; // 하위 폴더에서 빠져나오면 깊이 1개 빼기
             }
         }
     }

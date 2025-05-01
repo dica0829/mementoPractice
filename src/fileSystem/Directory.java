@@ -41,7 +41,6 @@ public class Directory implements FileSystemComponent {
     }
 
     // 과제2
-
     @Override
     public String serialize() { //폴더제목/ (total: 사이즈) depth: 깊이
         String result = name + "/ (total: " + this.getSize() + " B) depth: " + depth + "\n";
@@ -54,35 +53,33 @@ public class Directory implements FileSystemComponent {
     @Override
     public void deserialize(String opaque) {
         String[] lines = opaque.split("\n"); //한줄마다 잘라넣기
-        lines = Arrays.copyOfRange(lines, 1, lines.length); //최상위 디렉토리를 stack에 넣었으니 index 0을 제외
-        Stack<Directory> stack = new Stack<>(); // 부모 디렉토리를 저장하는 스택
-        stack.push(this); // 현재 Directory가 최상위 디렉토리
-        for (String line : lines) {
-            //현재 파일의 깊이 파악
-            int depth = Integer.parseInt(line.replaceAll(".*depth: ", ""));
+        lines = Arrays.copyOfRange(lines, 1, lines.length); //최상위 디렉토리를 시작으로 넣을 것이니 index 0을 제외
+        deserializeRecursive(this, lines, 0);
+    }
 
-            // 현재 파일의 깊이가 이전 폴더랑 같거나 더 얕다면 이전 폴더를 스택에서 삭제하여 부모를 최신화
-            while (stack.size() > 1 && stack.peek().depth >= depth) {
-                stack.pop();
+    public int deserializeRecursive(Directory current, String[] lines, int index) {
+        while (index < lines.length) { //읽은 라인만큼 확인
+            int depth = Integer.parseInt(lines[index].replaceAll(".*depth: ", ""));
+
+            // 현재 디렉토리의 depth보다 이 파일의 depth가 작거나 같으면 디렉토리에서 빠져나옴
+            // (크다면 디렉토리 안 파일임)
+            if (depth <= current.depth) {
+                break;
             }
-            if (line.contains("/ (total:")) {
-                // 디렉토리인 경우
-                String dirName = line.split("/")[0];
-                Directory dir = new Directory(dirName, depth);
-                stack.peek().add(dir);  // 부모 디렉토리에 자식 디렉토리 추가
-                stack.push(dir);  // 새 디렉토리를 스택 최상위에 추가
+
+            if (lines[index].contains("/ (total:")) {// 디렉토리인 경우
+                String dirName = lines[index].split("/")[0]; //이름
+                Directory dir = new Directory(dirName, depth);//현재 depth와 이름을 새로운 디렉토리로 만듦
+                current.add(dir); // 상위 디렉토리에 추가
+                index = deserializeRecursive(dir, lines, index + 1);// 재귀로 돌고 난 뒤 다음 인덱스를 반환
             } else {
                 // 파일인 경우
                 File file = new File();
-                file.deserialize(line); // 파일 복원
-                stack.peek().add(file);  // 부모 디렉토리에 파일 추가
+                file.deserialize(lines[index]); // 파일 복원
+                current.add(file);  // 부모 디렉토리에 파일 추가
+                index++; // 다음 줄
             }
         }
-
-        /*
-        1. depth 비교
-        2. 파일이면 부모 디렉토리에 파일 추가
-        3. 폴더면 디렉토리 추가 하고 그 디렉토리를 재귀로 판단
-         */
+        return index;
     }
 }
