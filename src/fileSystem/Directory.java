@@ -6,15 +6,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Directory implements FileSystemComponent {
-    private String name; // 폴더 이름
-    private int depth; // 폴더 깊이
+    private String name; // 디렉토리 이름
+    private int depth; // 디렉토리 깊이
     public ArrayList<FileSystemComponent> files = new ArrayList<>(); // 파일 목록을 읽기 위한 리스트
 
     public Directory() { //기본 최상위 생성자
         this(".", 0);
     }
 
-    public Directory(String name, int depth) { // 폴더 지정 생성자
+    public Directory(String name, int depth) { // 디렉토리 지정 생성자
         this.name = name;
         this.depth = depth;
     }
@@ -24,7 +24,7 @@ public class Directory implements FileSystemComponent {
     }
 
     @Override
-    public void display() { // 현재 있는 폴더의 파일들을 보여준다.
+    public void display() { // 현재 있는 디렉토리의 파일들을 보여준다.
         System.out.printf(" ".repeat(depth)+ "%s/ (total: %d B)\n", name, this.getSize());
         for (FileSystemComponent file : files) {
             file.display();
@@ -32,10 +32,10 @@ public class Directory implements FileSystemComponent {
     }
 
     @Override
-    public long getSize() { // 폴더 사이즈 구하기
+    public long getSize() { // 디렉토리 사이즈는 하위 파일의 사이즈를 재귀적으로 다 더한 뒤 출력
         long sum = 0; // 사이즈 합계
         for (FileSystemComponent file : files) {
-            sum += file.getSize(); // 하위 파일의 사이즈를 구한다.
+            sum += file.getSize();
         }
         return sum;
     }
@@ -45,7 +45,7 @@ public class Directory implements FileSystemComponent {
     public String serialize() { //Dir:name/ (total: size) depth: depth
         String result = "Dir:" + name + "/ (total: " + this.getSize() + " B) depth:" + depth + "\n";
         for (FileSystemComponent file : files) {
-            result += name + "/" + file.serialize(); // 문자열 결
+            result += name + "/" + file.serialize();
         }
         return result;
     }
@@ -73,17 +73,17 @@ public class Directory implements FileSystemComponent {
                 break;
             }
 
-            if (matcher.matches()) {// 디렉토리인 경우
+            if (matcher.matches()) {// 디렉토리인 경우 현 디렉토리에 추가하고 재귀 시작
                 String dirName = matcher.group(2); //정규식의 이름을 갖고옴 (.+)
                 Directory dir = new Directory(dirName, depth);//현재 depth와 이름을 새로운 디렉토리로 만듦
-                current.add(dir); // 상위 디렉토리에 추가
+                current.add(dir);
                 index = deserializeRecursive(dir, lines, index + 1);// 재귀로 돌고 난 뒤 다음 인덱스를 반환
             } else {
-                // 파일인 경우
+                // 파일인 경우 파일 복원 후 현 디렉토리에 파일 추가
                 File file = new File();
-                file.deserialize(line); // 파일 복원
-                current.add(file);  // 부모 디렉토리에 파일 추가
-                index++; // 다음 줄
+                file.deserialize(line);
+                current.add(file);
+                index++;
             }
         }
         return index;

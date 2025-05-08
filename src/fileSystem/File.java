@@ -17,12 +17,12 @@ public class File implements FileSystemComponent {
         this("", 0, 0);
     }
 
-    @Override
+    @Override // 현재 파일의 이름과 사이즈를 출력
     public void display() { // 파일 이름과 사이즈를 출력, 깊이에 따른 들여쓰기
         System.out.printf(" ".repeat(depth)+"%s (%d B)\n", name, size);
     }
 
-    @Override
+    @Override // 파일 사이즈를 반환
     public long getSize() { // 사이즈 반환
         return size;
     }
